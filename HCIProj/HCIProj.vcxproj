@@ -38,6 +38,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>D:\externalLibs\glm;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>D:\externalLibs\glm;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt_defaults.props')">
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
@@ -82,6 +88,9 @@
   <ItemGroup>
     <ClCompile Include="HCIProj.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainOpenGLWidget.cpp" />
+    <ClCompile Include="Objects3D.cpp" />
+    <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="HCIProj.h" />
@@ -91,6 +100,13 @@
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="HCIProj.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="MainOpenGLWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Objects3D.h" />
+    <ClInclude Include="Shader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

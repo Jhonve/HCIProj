@@ -1,29 +1,41 @@
-<UI version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>HCIProjClass</class>
- <widget class="QMainWindow" name="HCIProjClass" >
-  <property name="objectName" >
-   <string notr="true">HCIProjClass</string>
-  </property>
-  <property name="geometry" >
+ <widget class="QMainWindow" name="HCIProjClass">
+  <property name="geometry">
    <rect>
-	<x>0</x>
-	<y>0</y>
-	<width>600</width>
-	<height>400</height>
+    <x>0</x>
+    <y>0</y>
+    <width>532</width>
+    <height>532</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>HCIProj</string>
   </property>
-  <widget class="QMenuBar" name="menuBar" />
-  <widget class="QToolBar" name="mainToolBar" />
-  <widget class="QWidget" name="centralWidget" />
-  <widget class="QStatusBar" name="statusBar" />
+  <widget class="QWidget" name="centralWidget">
+   <widget class="MainOpenGLWidget" name="main_opengl_widget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>512</width>
+      <height>512</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
  </widget>
- <layoutDefault spacing="6" margin="11" />
- <pixmapfunction></pixmapfunction>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>MainOpenGLWidget</class>
+   <extends>QOpenGLWidget</extends>
+   <header>MainOpenGLWidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
-   <include location="HCIProj.qrc"/>
+  <include location="HCIProj.qrc"/>
  </resources>
  <connections/>
-</UI>
+</ui>
