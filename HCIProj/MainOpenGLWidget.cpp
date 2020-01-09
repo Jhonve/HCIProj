@@ -25,11 +25,16 @@ MainOpenGLWidget::MainOpenGLWidget(QWidget *parent)
 	}
 
 	m_object_3d = new Objects3D("Data/bunny.off");
+
+	setFocusPolicy(Qt::StrongFocus);
+	m_video_cap = cv::VideoCapture(0);
 }
 
 MainOpenGLWidget::~MainOpenGLWidget()
 {
 	cleanup();
+	m_video_cap.release();
+	cv::destroyAllWindows();
 }
 
 QSize MainOpenGLWidget::minimumSizeHint() const
@@ -116,7 +121,7 @@ void MainOpenGLWidget::initializeGL()
 	m_core->glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
 	m_core->glEnableVertexAttribArray(2);
 
-	m_core->glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	m_core->glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
 
 	// set camera
 	m_camera.setToIdentity();
@@ -189,6 +194,53 @@ void MainOpenGLWidget::keyPressEvent(QKeyEvent *event)
 	{
 	case Qt::Key_Escape:
 		close();
+	case Qt::Key_M:
+		if (event->isAutoRepeat() == true)
+		{
+			// stay press
+			cv::Mat cv_frame;
+			m_video_cap >> cv_frame;
+
+			dlib::array2d<dlib::bgr_pixel> dlib_img;
+			dlib::assign_image(dlib_img, dlib::cv_image<dlib::bgr_pixel>(cv_frame));
+			dlib::pyramid_up(dlib_img);
+
+			std::vector<dlib::rectangle> dets = m_detector(dlib_img);
+			if (dets.size() > 0)
+			{
+				std::cout << "detctors: " << dets[0].bottom() << std::endl;
+				glm::ivec4 current_face_det = glm::ivec4(dets[0].left(), dets[0].top(), dets[0].right(), dets[0].bottom());
+
+				current_face_det -= m_start_face_det;
+
+				setXRotation(m_xRot + -1 * current_face_det[1]);
+				setYRotation(m_yRot + -1 * current_face_det[0]);
+			}
+
+			cv::imshow("test", cv_frame);
+		}
+		else
+		{
+			// when press
+			std::cout << "Face-moving Now" << std::endl;
+
+			cv::Mat cv_frame;
+			m_video_cap >> cv_frame;
+
+			dlib::array2d<dlib::bgr_pixel> dlib_img;
+			dlib::assign_image(dlib_img, dlib::cv_image<dlib::bgr_pixel>(cv_frame));
+			dlib::pyramid_up(dlib_img);
+
+			std::vector<dlib::rectangle> dets = m_detector(dlib_img);
+
+			if (dets.size() > 0)
+			{
+				std::cout << "detctors: " << dets[0].bottom() << std::endl;
+				m_start_face_det = glm::ivec4(dets[0].left(), dets[0].top(), dets[0].right(), dets[0].bottom());
+			}
+
+			dets.clear();
+		}
 	default:
 		break;
 	}

@@ -13,6 +13,15 @@
 
 #include "Objects3D.h"
 
+#include <opencv2/opencv.hpp>
+
+#include <dlib/image_processing/frontal_face_detector.h>
+#include <dlib/gui_widgets.h>
+#include <dlib/image_io.h>
+#include <dlib/image_processing.h>
+#include <dlib/opencv/cv_image.h>
+#include <iostream>
+
 class MainOpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
 	Q_OBJECT
@@ -72,4 +81,9 @@ private:
 	static bool m_transparent;
 
 	bool m_is_reload;
+
+	dlib::frontal_face_detector m_detector = dlib::get_frontal_face_detector();
+	glm::ivec4 m_start_face_det;
+
+	cv::VideoCapture m_video_cap;
 };

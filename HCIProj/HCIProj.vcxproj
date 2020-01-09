@@ -39,10 +39,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\externalLibs\glm;$(IncludePath)</IncludePath>
+    <IncludePath>D:\softwares\DLib;D:\externalLibs\opencv-debug-344\include\opencv2;D:\externalLibs\opencv-debug-344\include\opencv;D:\externalLibs\opencv-debug-344\include;D:\externalLibs\glm;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\softwares\DLib\debug_build\dlib\Debug;D:\externalLibs\opencv-debug-344\x64\vc15\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>D:\externalLibs\glm;$(IncludePath)</IncludePath>
+    <IncludePath>D:\softwares\DLib;D:\externalLibs\opencv-release-344\include\opencv2;D:\externalLibs\opencv-release-344\include\opencv;D:\externalLibs\opencv-release-344\include;D:\externalLibs\glm;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\softwares\DLib\release_build\dlib\Release;D:\externalLibs\opencv-release-344\x64\vc15\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt_defaults.props')">
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
@@ -65,11 +67,14 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\softwares\DLib\debug_build\dlib\Debug;D:\externalLibs\opencv-debug-344\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opencv_calib3d344d.lib;opencv_core344d.lib;opencv_dnn344d.lib;opencv_features2d344d.lib;opencv_flann344d.lib;opencv_highgui344d.lib;opencv_imgcodecs344d.lib;opencv_imgproc344d.lib;opencv_ml344d.lib;opencv_objdetect344d.lib;opencv_photo344d.lib;opencv_shape344d.lib;opencv_stitching344d.lib;opencv_superres344d.lib;opencv_video344d.lib;opencv_videoio344d.lib;opencv_videostab344d.lib;dlib19.16.0_debug_64bit_msvc1916.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -78,14 +83,18 @@
       <DebugInformationFormat />
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\softwares\DLib\release_build\dlib\Release;D:\externalLibs\opencv-release-344\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opencv_calib3d344.lib;opencv_core344.lib;opencv_dnn344.lib;opencv_features2d344.lib;opencv_flann344.lib;opencv_highgui344.lib;opencv_imgcodecs344.lib;opencv_imgproc344.lib;opencv_ml344.lib;opencv_objdetect344.lib;opencv_photo344.lib;opencv_shape344.lib;opencv_stitching344.lib;opencv_superres344.lib;opencv_video344.lib;opencv_videoio344.lib;opencv_videostab344.lib;dlib19.16.0_release_64bit_msvc1916.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\softwares\DLib\dlib\all\source.cpp" />
     <ClCompile Include="HCIProj.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainOpenGLWidget.cpp" />
