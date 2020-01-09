@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# Floders
+x64/
+.vs/
