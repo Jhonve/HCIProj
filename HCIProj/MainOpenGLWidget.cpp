@@ -152,7 +152,7 @@ void MainOpenGLWidget::paintGL()
 		m_core->glGenBuffers(1, &VBOObj);
 		m_core->glBindVertexArray(VAOObj);
 		m_core->glBindBuffer(GL_ARRAY_BUFFER, VBOObj);
-		m_core->glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * (m_object_3d->m_num_faces * 3 * 6), m_object_3d->m_vertices_data, GL_STATIC_DRAW);
+		m_core->glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * (m_object_3d->m_num_faces * 3 * 9), m_object_3d->m_vertices_data, GL_STATIC_DRAW);
 		m_core->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (void*)0);
 		m_core->glEnableVertexAttribArray(0);
 		m_core->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
@@ -197,30 +197,41 @@ void MainOpenGLWidget::keyPressEvent(QKeyEvent *event)
 	case Qt::Key_M:
 		if (event->isAutoRepeat() == true)
 		{
+			glm::ivec4 current_face_det = glm::ivec4(0, 0, 0, 0);
 			// stay press
 			cv::Mat cv_frame;
 			m_video_cap >> cv_frame;
+
+			// cv::imshow("test", cv_frame);
 
 			dlib::array2d<dlib::bgr_pixel> dlib_img;
 			dlib::assign_image(dlib_img, dlib::cv_image<dlib::bgr_pixel>(cv_frame));
 			dlib::pyramid_up(dlib_img);
 
 			std::vector<dlib::rectangle> dets = m_detector(dlib_img);
+			std::cout << "number of facess: " << dets.size() << std::endl;
 			if (dets.size() > 0)
 			{
-				std::cout << "detctors: " << dets[0].bottom() << std::endl;
-				glm::ivec4 current_face_det = glm::ivec4(dets[0].left(), dets[0].top(), dets[0].right(), dets[0].bottom());
+				for (int i_f = 0; i_f < dets.size(); i_f++)
+				{
+					current_face_det += glm::ivec4(dets[i_f].left(), dets[i_f].top(), dets[i_f].right(), dets[i_f].bottom());
+				}
+				glm::ivec4 delta_face_det = current_face_det - m_start_face_det;
 
-				current_face_det -= m_start_face_det;
-
-				setXRotation(m_xRot + -1 * current_face_det[1]);
-				setYRotation(m_yRot + -1 * current_face_det[0]);
+				setXRotation(m_xRot + -1 * (5 + (dets.size() - 1) * 1) * delta_face_det[1]);
+				setYRotation(m_yRot + (5 + (dets.size() -1) * 1) * delta_face_det[0]);
+				m_start_face_det = current_face_det;
+			}
+			else
+			{
+				std::cout << "Make your face in the region where the camera can see!" << dets.size() << std::endl;
 			}
 
-			cv::imshow("test", cv_frame);
+			dets.clear();
 		}
 		else
 		{
+			m_start_face_det = glm::ivec4(0, 0, 0, 0);
 			// when press
 			std::cout << "Face-moving Now" << std::endl;
 
@@ -233,10 +244,13 @@ void MainOpenGLWidget::keyPressEvent(QKeyEvent *event)
 
 			std::vector<dlib::rectangle> dets = m_detector(dlib_img);
 
+			std::cout << "number of facess: " << dets.size() << std::endl;
 			if (dets.size() > 0)
 			{
-				std::cout << "detctors: " << dets[0].bottom() << std::endl;
-				m_start_face_det = glm::ivec4(dets[0].left(), dets[0].top(), dets[0].right(), dets[0].bottom());
+				for (int i_f = 0; i_f < dets.size(); i_f++)
+				{
+					m_start_face_det += glm::ivec4(dets[i_f].left(), dets[i_f].top(), dets[i_f].right(), dets[i_f].bottom());
+				}
 			}
 
 			dets.clear();
@@ -286,4 +300,22 @@ void MainOpenGLWidget::wheelEvent(QWheelEvent *event)
 		m_camera.translate(0, 0, -0.05f);
 		update();
 	}
+}
+
+void MainOpenGLWidget::slotLoadModel()
+{
+	delete m_object_3d;
+	QString mesh_file_name = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("OBJ, OFF(*.obj *.off)"));
+
+	if (mesh_file_name == "")
+	{
+		return;
+	}
+
+	std::cout << "_____________Load New Mesh!_____________" << std::endl;
+
+	m_object_3d = new Objects3D(mesh_file_name.toStdString().c_str());
+
+	m_is_reload = true;
+	update();
 }

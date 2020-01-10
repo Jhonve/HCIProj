@@ -39,6 +39,9 @@ public:
 	Objects3D* m_object_3d;
 
 public slots:
+	void slotLoadModel();
+
+public slots:
 	void setXRotation(int angle);
 	void setYRotation(int angle);
 	void setZRotation(int angle);

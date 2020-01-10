@@ -12,4 +12,7 @@ public:
 
 private:
 	Ui::HCIProjClass ui;
+
+private:
+	void bindSlotsAndSignals();
 };
